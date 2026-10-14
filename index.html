@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cockpit IA DH SPS</title>
+
+<style>
+
+body{
+    font-family:Segoe UI,Arial,sans-serif;
+    background:#f4f6f9;
+    margin:0;
+}
+
+header{
+    background:#0070ad;
+    color:white;
+    padding:20px;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#0070ad;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#005b8d;
+}
+
+textarea{
+    width:100%;
+    min-height:250px;
+    border-radius:8px;
+    padding:10px;
+    box-sizing:border-box;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🚀 Cockpit IA DH SPS</h1>
+<p>Portail central des agents IA</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h3>📅 Agent Préparation Réunion</h3>
+<p>Prépare les réunions à partir de l'invitation.</p>
+<button onclick="launchAgent(meetingPrompt)">
+Lancer
+</button>
+</div>
+
+<div class="card">
+<h3>📧 Agent Mail</h3>
+<p>Analyse des emails récents.</p>
+<button onclick="launchAgent(mailPrompt)">
+Lancer
+</button>
+</div>
+
+<div class="card">
+<h3>📋 Agent Planner</h3>
+<p>Mise à jour automatique des actions.</p>
+<button onclick="launchAgent(plannerPrompt)">
+Lancer
+</button>
+</div>
+
+<div class="card">
+<h3>💰 Agent Financier</h3>
+<p>Analyse CM / RAF / Forecast.</p>
+<button onclick="launchAgent(financePrompt)">
+Lancer
+</button>
+</div>
+
+</div>
+
+<script>
+
+const meetingPrompt =
+`Prépare ma prochaine réunion en analysant :
+- invitation
+- participants
+- mails récents
+- fichiers associés
+- risques
+- décisions attendues
+- actions à suivre`;
+
+const mailPrompt =
+`Analyse tous les échanges récents et produit :
+- urgences
+- escalades
+- actions attendues
+- synthèse exécutive`;
+
+const plannerPrompt =
+`Analyse les emails, réunions et Teams puis :
+- crée les tâches manquantes
+- mets à jour les tâches existantes
+- ajoute les échéances`;
+
+const financePrompt =
+`Analyse les indicateurs financiers :
+- CM
+- RAF
+- Forecast
+- dérives
+- risques
+- actions correctives`;
+
+function launchAgent(prompt){
+
+    const win = window.open("", "_blank");
+
+    win.document.write(`
+    <html>
+    <head>
+        <title>Agent IA</title>
+    </head>
+    <body style="font-family:Segoe UI;padding:20px">
+        <h2>Prompt de l'agent</h2>
+        <textarea>${prompt}</textarea>
+    </body>
+    </html>
+    `);
+
+}
+
+</script>
+
+</body>
+</html>
