@@ -1,59 +1,329 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Cockpit IA DH SPS - portail de pilotage">
-  <title>Cap Pilotage | Cockpit IA DH SPS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CAP Pilotage | Mes agents</title>
+
   <style>
-    :root{--blue:#0070ad;--navy:#0b1f3a;--cyan:#00a8e0;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#637083;--line:#dce4ef;--ok:#138a52;--warn:#b86800;--shadow:0 12px 32px rgba(11,31,58,.10)}
-    *{box-sizing:border-box} body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    button,a{font:inherit}.shell{min-height:100vh;display:grid;grid-template-columns:260px 1fr}.side{background:linear-gradient(180deg,var(--navy),#123560);color:#fff;padding:28px 20px;display:flex;flex-direction:column;gap:26px}.brand{display:flex;gap:12px;align-items:center}.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--cyan),#9be8ff);display:grid;place-items:center;font-size:23px}.brand strong{display:block;font-size:18px}.brand small{color:#bcd0e8}.nav{display:grid;gap:8px}.nav button{border:0;background:transparent;color:#dce8f5;text-align:left;padding:12px 14px;border-radius:10px;cursor:pointer}.nav button.active,.nav button:hover{background:rgba(255,255,255,.12);color:#fff}.side-note{margin-top:auto;font-size:12px;color:#bcd0e8;line-height:1.5}
-    main{padding:34px;overflow:auto}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:26px}.top h1{margin:0;font-size:30px}.top p{margin:7px 0 0;color:var(--muted)}.badge{background:#e7f7fd;color:#006d94;border:1px solid #bceaf8;padding:8px 12px;border-radius:999px;font-weight:600;white-space:nowrap}.hero{background:linear-gradient(120deg,#0070ad,#124b7d);color:#fff;border-radius:20px;padding:26px;box-shadow:var(--shadow);display:grid;grid-template-columns:1.5fr 1fr;gap:24px;align-items:center;margin-bottom:26px}.hero h2{margin:0 0 10px;font-size:25px}.hero p{margin:0;color:#d9f0fb;line-height:1.55}.hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:rgba(255,255,255,.12);padding:14px;border-radius:14px}.stat strong{font-size:24px;display:block}.stat span{font-size:12px;color:#d9f0fb}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:20px;box-shadow:0 6px 20px rgba(11,31,58,.06);display:flex;flex-direction:column;min-height:245px}.icon{font-size:27px}.card h3{margin:12px 0 7px}.card p{color:var(--muted);line-height:1.5;margin:0 0 16px}.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}.chip{font-size:12px;background:#eef4fa;color:#405268;padding:5px 8px;border-radius:999px}.actions{display:flex;gap:9px;margin-top:auto}.primary,.secondary{border-radius:10px;padding:10px 12px;cursor:pointer;font-weight:600}.primary{border:1px solid var(--blue);background:var(--blue);color:#fff;flex:1}.primary:hover{background:#005b8d}.secondary{border:1px solid var(--line);background:#fff;color:var(--text)}.secondary:hover{background:#f2f6fa}.panel{display:none}.panel.active{display:block}.section-title{margin:0 0 18px}.prompt-box{background:#fff;border:1px solid var(--line);border-radius:17px;padding:20px;box-shadow:var(--shadow)}textarea{width:100%;min-height:320px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:15px;font:14px/1.55 Consolas,monospace;color:var(--text)}.back{border:0;background:none;color:var(--blue);font-weight:700;padding:0;margin-bottom:14px;cursor:pointer}.status{min-height:22px;color:var(--ok);font-size:13px;margin-top:9px}.footer{color:var(--muted);font-size:12px;margin-top:24px}
-    @media(max-width:850px){.shell{grid-template-columns:1fr}.side{position:static}.nav{grid-template-columns:repeat(2,1fr)}.side-note{display:none}.hero{grid-template-columns:1fr}main{padding:22px}.top{align-items:flex-start;flex-direction:column}}
+    :root {
+      --bleu: #0070ad;
+      --fond: #f3f6fa;
+      --texte: #172b4d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--texte);
+      background: var(--fond);
+    }
+
+    header {
+      padding: 32px 24px;
+      color: white;
+      background: linear-gradient(120deg, #003b64, var(--bleu));
+    }
+
+    header div, main {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h1 { margin: 0 0 10px; }
+    header p { margin: 0; }
+
+    main { padding: 24px; }
+
+    .notice {
+      padding: 16px;
+      margin-bottom: 24px;
+      background: #e7f3fb;
+      border-radius: 12px;
+      line-height: 1.6;
+    }
+
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .carte {
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      background: white;
+      border: 1px solid #dde5ef;
+      border-radius: 16px;
+      box-shadow: 0 5px 18px #172b4d08;
+    }
+
+    .icone { font-size: 32px; }
+    h2 { font-size: 20px; margin: 16px 0 8px; }
+
+    .description {
+      flex: 1;
+      line-height: 1.5;
+      color: #53657c;
+    }
+
+    button {
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--bleu);
+      color: white;
+    }
+
+    button:hover { background: #005789; }
+
+    button:disabled {
+      background: #dce3eb;
+      color: #53657c;
+      cursor: not-allowed;
+    }
+
+    details { margin-top: 18px; }
+    summary { cursor: pointer; color: var(--bleu); }
+
+    label {
+      display: block;
+      margin: 16px 0 6px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #b8c5d4;
+      border-radius: 6px;
+      font: inherit;
+    }
+
+    .enregistrer { margin-top: 10px; width: 100%; }
+
+    .statut {
+      min-height: 20px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    :focus-visible {
+      outline: 3px solid #ffb900;
+      outline-offset: 3px;
+    }
+
+    footer {
+      padding: 24px 0;
+      color: #53657c;
+      font-size: 13px;
+      line-height: 1.6;
+    }
   </style>
 </head>
+
 <body>
-<div class="shell">
-  <aside class="side">
-    <div class="brand"><div class="logo">✦</div><div><strong>Cap Pilotage</strong><small>Cockpit IA DH SPS</small></div></div>
-    <nav class="nav" aria-label="Navigation principale">
-      <button class="active" data-page="dashboard">▦ Tableau de bord</button>
-      <button data-agent="meeting">📅 Réunions</button><button data-agent="mail">✉️ Emails</button><button data-agent="planner">☑️ Actions</button><button data-agent="finance">€ Finances</button><button data-agent="risk">⚠️ Risques</button>
-    </nav>
-    <div class="side-note">Version 1 statique<br>Les prompts sont copiés puis exécutés dans Microsoft 365 Copilot.</div>
-  </aside>
+  <header>
+    <div>
+      <h1>CAP Pilotage</h1>
+      <p>Mon portail personnel d’agents Copilot</p>
+    </div>
+  </header>
+
   <main>
-    <section id="dashboard" class="panel active">
-      <div class="top"><div><h1>Bonjour Jean-Gaël 👋</h1><p>Centralise les routines de pilotage et lance le bon agent en un clic.</p></div><div class="badge">● Version 1 opérationnelle</div></div>
-      <div class="hero"><div><h2>Ton cockpit de pilotage quotidien</h2><p>Sélectionne un agent, adapte si nécessaire le prompt, puis ouvre Copilot et colle la consigne. Aucune donnée professionnelle n'est stockée dans cette page.</p></div><div class="hero-stats"><div class="stat"><strong>5</strong><span>agents disponibles</span></div><div class="stat"><strong>0</strong><span>donnée stockée</span></div></div></div>
-      <div id="cards" class="grid"></div>
-      <div class="footer">Cap Pilotage · Portail personnel de pilotage · GitHub Pages</div>
-    </section>
-    <section id="agent" class="panel">
-      <button class="back" id="back">← Retour au tableau de bord</button>
-      <h2 class="section-title" id="agentTitle"></h2>
-      <div class="prompt-box"><p id="agentDesc"></p><textarea id="prompt" aria-label="Prompt de l'agent"></textarea><div class="actions"><button class="primary" id="copy">Copier le prompt</button><button class="secondary" id="openCopilot">Ouvrir Microsoft 365 Copilot</button></div><div class="status" id="status" role="status"></div></div>
-    </section>
+    <div class="notice">
+      <strong>Configurer un agent :</strong>
+      ouvre « Configurer le lien », colle son lien de partage,
+      puis sélectionne « Enregistrer ».
+      Aucun mot de passe ni jeton ne doit être renseigné.
+    </div>
+
+    <section class="grille" id="agents" aria-label="Mes agents"></section>
+
+    <footer>
+      Les liens personnalisés sont conservés uniquement dans ce navigateur.
+      Ce portail ne lit pas tes emails et ne lance aucune automatisation
+      en arrière-plan.
+    </footer>
   </main>
-</div>
-<script>
-const agents={
- meeting:{icon:'📅',title:'Agent Préparation Réunion',desc:"Prépare une réunion à partir de l'invitation et du contexte Microsoft 365.",chips:['Invitation','Participants','Décisions'],prompt:`Prépare ma prochaine réunion.\n\nAnalyse les éléments disponibles dans l'invitation, les réunions précédentes, les emails, les échanges Teams et les documents associés.\n\nProduis une synthèse structurée avec :\n1. Objectif et contexte\n2. Participants clés et rôle attendu\n3. Décisions déjà prises\n4. Sujets ouverts et points de vigilance\n5. Décisions attendues pendant la réunion\n6. Actions en cours avec responsable et échéance si disponible\n7. Proposition d'agenda court\n\nSépare clairement les faits vérifiés des suggestions et cite les sources utilisées.`},
- mail:{icon:'✉️',title:'Agent Synthèse Emails',desc:'Transforme les échanges récents en priorités de pilotage.',chips:['Urgences','Escalades','Réponses'],prompt:`Analyse mes emails professionnels récents et produis un cockpit de pilotage.\n\nClasse les éléments en :\n1. Urgences à traiter aujourd'hui\n2. Escalades et risques client\n3. Décisions attendues de ma part\n4. Actions à déléguer\n5. Réponses ou relances à préparer\n6. Informations importantes sans action immédiate\n\nPour chaque action, indique le contexte, le demandeur, l'échéance explicite si elle existe et la prochaine étape recommandée. Ne déduis pas d'échéance absente.`},
- planner:{icon:'☑️',title:'Agent Actions & Planner',desc:'Identifie puis structure les actions attendues de toi.',chips:['Actions','Échéances','Statuts'],prompt:`Analyse mes échanges récents dans les emails, réunions et Teams afin d'identifier toutes les actions qui sont explicitement attendues de ma part.\n\nPour chaque action, fournis :\n- Titre court\n- Description opérationnelle\n- Source\n- Projet ou client\n- Priorité proposée\n- Échéance explicite, ou "non précisée"\n- Statut suggéré\n- Prochaine étape\n\nDétecte les doublons avec les actions déjà existantes dans Planner. Propose les créations ou mises à jour, mais demande une validation avant toute modification.`},
- finance:{icon:'€',title:'Agent Pilotage Financier',desc:'Structure la revue CM, RAF, forecast et dérives.',chips:['CM','RAF','Forecast'],prompt:`Prépare une revue de pilotage financier à partir des données disponibles.\n\nAnalyse sans inventer de valeur :\n1. Chiffre d'affaires et trajectoire\n2. Marge et évolution\n3. RAF et forecast\n4. Écarts par rapport aux objectifs disponibles\n5. Dérives ou incohérences détectées\n6. Risques financiers\n7. Actions correctives proposées\n\nPrésente une synthèse exécutive, puis un tableau constats / impacts / actions / responsable / échéance. Mentionne les données manquantes.`},
- risk:{icon:'⚠️',title:'Agent Risques & Alertes',desc:'Consolide les signaux faibles, risques et plans de remédiation.',chips:['Risques','Impacts','Remédiation'],prompt:`Analyse les échanges et documents récents pour établir une vue consolidée des risques de delivery.\n\nPour chaque risque, précise :\n- Fait déclencheur et source\n- Projet ou client concerné\n- Catégorie : delivery, client, financier, staffing, qualité ou sécurité\n- Impact potentiel\n- Probabilité proposée avec justification\n- Plan de mitigation existant\n- Action supplémentaire recommandée\n- Responsable et échéance uniquement s'ils sont explicitement indiqués\n\nTermine par les trois sujets nécessitant une attention prioritaire. Distingue les faits des appréciations.`}
-};
-const cards=document.getElementById('cards');
-Object.entries(agents).forEach(([id,a])=>{const el=document.createElement('article');el.className='card';el.innerHTML=`<div class="icon">${a.icon}</div><h3>${a.title}</h3><p>${a.desc}</p><div class="chips">${a.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div><div class="actions"><button class="primary" data-launch="${id}">Lancer</button><button class="secondary" data-copy="${id}" title="Copier le prompt">Copier</button></div>`;cards.appendChild(el)});
-function showDashboard(){document.getElementById('dashboard').classList.add('active');document.getElementById('agent').classList.remove('active')}
-function launch(id){const a=agents[id];document.getElementById('agentTitle').textContent=`${a.icon} ${a.title}`;document.getElementById('agentDesc').textContent=a.desc;document.getElementById('prompt').value=a.prompt;document.getElementById('status').textContent='';document.getElementById('dashboard').classList.remove('active');document.getElementById('agent').classList.add('active')}
-async function copyText(text){try{await navigator.clipboard.writeText(text)}catch(e){const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}}
-document.addEventListener('click',async e=>{const launchId=e.target.dataset.launch||e.target.dataset.agent;if(launchId)launch(launchId);if(e.target.dataset.copy){await copyText(agents[e.target.dataset.copy].prompt);e.target.textContent='Copié ✓';setTimeout(()=>e.target.textContent='Copier',1200)}if(e.target.dataset.page==='dashboard')showDashboard()});
-document.getElementById('back').onclick=showDashboard;
-document.getElementById('copy').onclick=async()=>{await copyText(document.getElementById('prompt').value);document.getElementById('status').textContent='Prompt copié dans le presse-papiers.'};
-document.getElementById('openCopilot').onclick=()=>window.open('https://m365.cloud.microsoft/chat','_blank','noopener,noreferrer');
-</script>
+
+  <script>
+    "use strict";
+
+    // Pour partager des liens préconfigurés, renseigner les champs url.
+    // Ne jamais y placer de secret ou d'URL HTTP signée Power Automate.
+    const agents = [
+      {
+        id: "synthese",
+        nom: "Synthèse DH",
+        icone: "📊",
+        description: "Accéder à mon assistant de synthèse de pilotage.",
+        url: ""
+      },
+      {
+        id: "reunion",
+        nom: "Préparation réunion",
+        icone: "📅",
+        description: "Accéder à mon agent de préparation des réunions.",
+        url: ""
+      },
+      {
+        id: "mail",
+        nom: "Synthèse des échanges",
+        icone: "📧",
+        description: "Accéder à mon agent de synthèse des échanges.",
+        url: ""
+      },
+      {
+        id: "planner",
+        nom: "Suivi des actions",
+        icone: "📋",
+        description: "Accéder à mon agent de suivi des actions.",
+        url: ""
+      },
+      {
+        id: "finance",
+        nom: "Pilotage financier",
+        icone: "💰",
+        description: "Accéder à mon assistant de pilotage financier.",
+        url: ""
+      },
+      {
+        id: "comex",
+        nom: "Synthèse COMEX",
+        icone: "🎯",
+        description: "Accéder à mon assistant de synthèse exécutive.",
+        url: ""
+      }
+    ];
+
+    function validerLien(valeur) {
+      const url = new URL(valeur);
+
+      if (url.protocol !== "https:" || url.username || url.password) {
+        throw new Error("Utilise un lien HTTPS sans identifiants.");
+      }
+
+      // Protection élémentaire contre la saisie de liens secrets.
+      const parametresInterdits = [
+        "sig", "token", "access_token", "id_token",
+        "client_secret", "code", "api_key", "apikey"
+      ];
+
+      for (const cle of url.searchParams.keys()) {
+        if (parametresInterdits.includes(cle.toLowerCase())) {
+          throw new Error(
+            "Ce lien semble contenir un secret. Utilise un lien de partage."
+          );
+        }
+      }
+
+      return url.href;
+    }
+
+    function lireLien(agent) {
+      try {
+        const valeur = localStorage.getItem("cap-agent-" + agent.id);
+        return valeur === null ? agent.url : valeur;
+      } catch {
+        return agent.url;
+      }
+    }
+
+    const grille = document.getElementById("agents");
+
+    agents.forEach(agent => {
+      const carte = document.createElement("article");
+      carte.className = "carte";
+
+      // Le contenu variable est affecté avec textContent, pas innerHTML.
+      carte.innerHTML = `
+        <span class="icone" aria-hidden="true"></span>
+        <h2></h2>
+        <p class="description"></p>
+        <button type="button" class="ouvrir" disabled>
+          Lien à configurer
+        </button>
+        <details>
+          <summary>Configurer le lien</summary>
+          <label>Lien de partage de l’agent</label>
+          <input type="url" placeholder="Coller le lien HTTPS"
+                 autocomplete="off" spellcheck="false">
+          <button type="button" class="enregistrer">Enregistrer</button>
+        </details>
+        <p class="statut" role="status" aria-live="polite"></p>
+      `;
+
+      carte.querySelector(".icone").textContent = agent.icone;
+      carte.querySelector("h2").textContent = agent.nom;
+      carte.querySelector(".description").textContent = agent.description;
+
+      const champ = carte.querySelector("input");
+      const label = carte.querySelector("label");
+      const bouton = carte.querySelector(".ouvrir");
+      const statut = carte.querySelector(".statut");
+
+      champ.id = "lien-" + agent.id;
+      label.htmlFor = champ.id;
+      champ.value = lireLien(agent);
+
+      let lienActif = "";
+
+      function actualiser() {
+        try {
+          lienActif = validerLien(champ.value.trim());
+          bouton.disabled = false;
+          bouton.textContent = "Ouvrir l’agent ↗";
+          bouton.setAttribute(
+            "aria-label", "Ouvrir " + agent.nom + " dans un nouvel onglet"
+          );
+        } catch {
+          lienActif = "";
+          bouton.disabled = true;
+          bouton.textContent = "Lien à configurer";
+        }
+      }
+
+      actualiser();
+
+      bouton.addEventListener("click", () => {
+        if (lienActif) {
+          window.open(lienActif, "_blank", "noopener,noreferrer");
+        }
+      });
+
+      carte.querySelector(".enregistrer").addEventListener("click", () => {
+        try {
+          const valeur = champ.value.trim();
+          const lien = valeur ? validerLien(valeur) : "";
+
+          try {
+            localStorage.setItem("cap-agent-" + agent.id, lien);
+            statut.textContent = lien
+              ? "Lien enregistré dans ce navigateur."
+              : "Lien supprimé.";
+          } catch {
+            statut.textContent =
+              "Lien utilisable pour cette session, mais non mémorisé.";
+          }
+
+          champ.value = lien;
+          actualiser();
+        } catch (erreur) {
+          statut.textContent = erreur instanceof TypeError
+            ? "Adresse invalide : colle un lien HTTPS complet."
+            : erreur.message;
+        }
+      });
+
+      grille.appendChild(carte);
+    });
+  </script>
 </body>
 </html>
