@@ -117,4 +117,357 @@
     }
 
     .planner .ouvrir:not(:disabled):hover {
-      background
+      background: #106638;
+    }
+
+    details {
+      margin-top: 18px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--bleu);
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 6px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #b8c5d4;
+      border-radius: 6px;
+      font: inherit;
+    }
+
+    .enregistrer {
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .statut {
+      min-height: 20px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    :focus-visible {
+      outline: 3px solid #ffb900;
+      outline-offset: 3px;
+    }
+
+    footer {
+      padding: 24px 0;
+      color: #53657c;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 360px) {
+      .grille {
+        grid-template-columns: 1fr;
+      }
+
+      main {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div>
+      <h1>CAP Pilotage</h1>
+      <p>Mes agents Copilot et mon accès Planner</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="notice">
+      <strong>Configurer une carte :</strong>
+      ouvre « Configurer le lien », colle le lien de partage
+      de ton agent ou l’adresse de ton Planner, puis sélectionne
+      « Enregistrer ».
+      Ne renseigne aucun mot de passe, secret ou jeton.
+    </div>
+
+    <section
+      class="grille"
+      id="agents"
+      aria-label="Mes agents et mon Planner">
+    </section>
+
+    <footer>
+      Les liens personnalisés sont conservés dans ce navigateur.
+      La carte « Mon Planner » ouvre Planner dans un nouvel onglet.
+      Ce portail ne lit pas tes emails, ne modifie pas tes tâches
+      et ne lance aucune automatisation en arrière-plan.
+    </footer>
+  </main>
+
+  <script>
+    "use strict";
+
+    /*
+     * Conserver les identifiants existants :
+     * ils servent à retrouver les liens déjà enregistrés.
+     *
+     * Les champs url peuvent contenir des liens par défaut.
+     * Ne jamais y placer de secret ou d'URL HTTP signée.
+     */
+    const agents = [
+      {
+        id: "synthese",
+        nom: "Analyse activité quotidienne",
+        icone: "📊",
+        description:
+          "Accéder à mon assistant d’analyse des échanges, priorités et actions du quotidien.",
+        url: ""
+      },
+      {
+        id: "reunion",
+        nom: "Préparation réunion",
+        icone: "📅",
+        description:
+          "Accéder à mon agent de préparation des réunions.",
+        url: ""
+      },
+      {
+        id: "mail",
+        nom: "Synthèse des échanges",
+        icone: "📧",
+        description:
+          "Accéder à mon agent de synthèse des échanges.",
+        url: ""
+      },
+      {
+        id: "planner",
+        nom: "Suivi des actions",
+        icone: "📋",
+        description:
+          "Accéder à mon agent de suivi des actions.",
+        url: ""
+      },
+      {
+        id: "planner-personnel",
+        nom: "Mon Planner",
+        icone: "✅",
+        description:
+          "Ouvrir mon Planner pour consulter et modifier mes actions dans l’application.",
+        url: "",
+        type: "planner"
+      },
+      {
+        id: "finance",
+        nom: "Pilotage financier",
+        icone: "💰",
+        description:
+          "Accéder à mon assistant de pilotage financier.",
+        url: ""
+      },
+      {
+        id: "comex",
+        nom: "Synthèse COMEX",
+        icone: "🎯",
+        description:
+          "Accéder à mon assistant de synthèse exécutive.",
+        url: ""
+      }
+    ];
+
+    function validerLien(valeur) {
+      const url = new URL(valeur);
+
+      if (
+        url.protocol !== "https:" ||
+        url.username ||
+        url.password
+      ) {
+        throw new Error(
+          "Utilise un lien HTTPS sans identifiants."
+        );
+      }
+
+      // Contrôle élémentaire, pas une garantie de détection de secrets.
+      const parametresInterdits = [
+        "sig",
+        "token",
+        "access_token",
+        "id_token",
+        "client_secret",
+        "code",
+        "api_key",
+        "apikey"
+      ];
+
+      for (const cle of url.searchParams.keys()) {
+        if (
+          parametresInterdits.includes(cle.toLowerCase())
+        ) {
+          throw new Error(
+            "Ce lien semble contenir un secret. Utilise un lien de partage."
+          );
+        }
+      }
+
+      return url.href;
+    }
+
+    function lireLien(agent) {
+      try {
+        const valeur = localStorage.getItem(
+          "cap-agent-" + agent.id
+        );
+
+        // Le lien enregistré reste prioritaire sur le lien par défaut.
+        return valeur === null ? agent.url : valeur;
+      } catch {
+        return agent.url;
+      }
+    }
+
+    const grille = document.getElementById("agents");
+
+    agents.forEach(agent => {
+      const carte = document.createElement("article");
+      carte.className = "carte";
+
+      if (agent.type === "planner") {
+        carte.classList.add("planner");
+      }
+
+      // Ce gabarit ne contient aucune donnée saisie par l’utilisateur.
+      carte.innerHTML = `
+        <span class="icone" aria-hidden="true"></span>
+        <h2></h2>
+        <p class="description"></p>
+
+        <button type="button" class="ouvrir" disabled>
+          Lien à configurer
+        </button>
+
+        <details>
+          <summary>Configurer le lien</summary>
+          <label></label>
+
+          <input
+            type="url"
+            placeholder="Coller le lien HTTPS"
+            autocomplete="off"
+            spellcheck="false">
+
+          <button type="button" class="enregistrer">
+            Enregistrer
+          </button>
+        </details>
+
+        <p
+          class="statut"
+          role="status"
+          aria-live="polite">
+        </p>
+      `;
+
+      carte.querySelector(".icone").textContent =
+        agent.icone;
+
+      carte.querySelector("h2").textContent =
+        agent.nom;
+
+      carte.querySelector(".description").textContent =
+        agent.description;
+
+      const champ = carte.querySelector("input");
+      const label = carte.querySelector("label");
+      const bouton = carte.querySelector(".ouvrir");
+      const statut = carte.querySelector(".statut");
+
+      champ.id = "lien-" + agent.id;
+      label.htmlFor = champ.id;
+
+      label.textContent = agent.type === "planner"
+        ? "Adresse de mon plan ou de ma vue Planner"
+        : "Lien de partage de l’agent";
+
+      champ.value = lireLien(agent);
+
+      let lienActif = "";
+
+      function actualiser() {
+        try {
+          lienActif = validerLien(champ.value.trim());
+          bouton.disabled = false;
+
+          bouton.textContent = agent.type === "planner"
+            ? "Ouvrir mon Planner ↗"
+            : "Ouvrir l’agent ↗";
+
+          bouton.setAttribute(
+            "aria-label",
+            "Ouvrir " + agent.nom + " dans un nouvel onglet"
+          );
+        } catch {
+          lienActif = "";
+          bouton.disabled = true;
+          bouton.textContent = "Lien à configurer";
+
+          bouton.setAttribute(
+            "aria-label",
+            "Lien à configurer pour " + agent.nom
+          );
+        }
+      }
+
+      actualiser();
+
+      bouton.addEventListener("click", () => {
+        if (lienActif) {
+          window.open(
+            lienActif,
+            "_blank",
+            "noopener,noreferrer"
+          );
+        }
+      });
+
+      carte.querySelector(".enregistrer")
+        .addEventListener("click", () => {
+          try {
+            const valeur = champ.value.trim();
+            const lien = valeur
+              ? validerLien(valeur)
+              : "";
+
+            try {
+              // Seule la clé de cette carte est mise à jour.
+              localStorage.setItem(
+                "cap-agent-" + agent.id,
+                lien
+              );
+
+              statut.textContent = lien
+                ? "Lien enregistré dans ce navigateur."
+                : "Lien de cette carte supprimé.";
+            } catch {
+              statut.textContent =
+                "Lien utilisable pour cette session, mais non mémorisé.";
+            }
+
+            champ.value = lien;
+            actualiser();
+          } catch (erreur) {
+            statut.textContent = erreur instanceof TypeError
+              ? "Adresse invalide : colle un lien HTTPS complet."
+              : erreur.message;
+          }
+        });
+
+      grille.appendChild(carte);
+    });
+  </script>
+</body>
+</html>
