@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CAP Pilotage | Mes agents</title>
+  <title>CAP Pilotage | Mes agents et Planner</title>
 
   <style>
     :root {
@@ -12,7 +12,9 @@
       --texte: #172b4d;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -27,15 +29,24 @@
       background: linear-gradient(120deg, #003b64, var(--bleu));
     }
 
-    header div, main {
+    header > div,
+    main {
       max-width: 1100px;
       margin: auto;
     }
 
-    h1 { margin: 0 0 10px; }
-    header p { margin: 0; }
+    h1 {
+      margin: 0 0 10px;
+    }
 
-    main { padding: 24px; }
+    header p {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    main {
+      padding: 24px;
+    }
 
     .notice {
       padding: 16px;
@@ -61,8 +72,18 @@
       box-shadow: 0 5px 18px #172b4d08;
     }
 
-    .icone { font-size: 32px; }
-    h2 { font-size: 20px; margin: 16px 0 8px; }
+    .carte.planner {
+      border-top: 4px solid #16844a;
+    }
+
+    .icone {
+      font-size: 32px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 16px 0 8px;
+    }
 
     .description {
       flex: 1;
@@ -81,7 +102,9 @@
       color: white;
     }
 
-    button:hover { background: #005789; }
+    button:hover {
+      background: #005789;
+    }
 
     button:disabled {
       background: #dce3eb;
@@ -89,241 +112,9 @@
       cursor: not-allowed;
     }
 
-    details { margin-top: 18px; }
-    summary { cursor: pointer; color: var(--bleu); }
-
-    label {
-      display: block;
-      margin: 16px 0 6px;
-      font-size: 14px;
+    .planner .ouvrir:not(:disabled) {
+      background: #16844a;
     }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #b8c5d4;
-      border-radius: 6px;
-      font: inherit;
-    }
-
-    .enregistrer { margin-top: 10px; width: 100%; }
-
-    .statut {
-      min-height: 20px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    :focus-visible {
-      outline: 3px solid #ffb900;
-      outline-offset: 3px;
-    }
-
-    footer {
-      padding: 24px 0;
-      color: #53657c;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-  </style>
-</head>
-
-<body>
-  <header>
-    <div>
-      <h1>CAP Pilotage</h1>
-      <p>Mon portail personnel d’agents Copilot</p>
-    </div>
-  </header>
-
-  <main>
-    <div class="notice">
-      <strong>Configurer un agent :</strong>
-      ouvre « Configurer le lien », colle son lien de partage,
-      puis sélectionne « Enregistrer ».
-      Aucun mot de passe ni jeton ne doit être renseigné.
-    </div>
-
-    <section class="grille" id="agents" aria-label="Mes agents"></section>
-
-    <footer>
-      Les liens personnalisés sont conservés uniquement dans ce navigateur.
-      Ce portail ne lit pas tes emails et ne lance aucune automatisation
-      en arrière-plan.
-    </footer>
-  </main>
-
-  <script>
-    "use strict";
-
-    // Pour partager des liens préconfigurés, renseigner les champs url.
-    // Ne jamais y placer de secret ou d'URL HTTP signée Power Automate.
-    const agents = [
-      {
-        id: "synthese",
-        nom: "Synthèse DH",
-        icone: "📊",
-        description: "Accéder à mon assistant de synthèse de pilotage.",
-        url: ""
-      },
-      {
-        id: "reunion",
-        nom: "Préparation réunion",
-        icone: "📅",
-        description: "Accéder à mon agent de préparation des réunions.",
-        url: ""
-      },
-      {
-        id: "mail",
-        nom: "Synthèse des échanges",
-        icone: "📧",
-        description: "Accéder à mon agent de synthèse des échanges.",
-        url: ""
-      },
-      {
-        id: "planner",
-        nom: "Suivi des actions",
-        icone: "📋",
-        description: "Accéder à mon agent de suivi des actions.",
-        url: ""
-      },
-      {
-        id: "finance",
-        nom: "Pilotage financier",
-        icone: "💰",
-        description: "Accéder à mon assistant de pilotage financier.",
-        url: ""
-      },
-      {
-        id: "comex",
-        nom: "Synthèse COMEX",
-        icone: "🎯",
-        description: "Accéder à mon assistant de synthèse exécutive.",
-        url: ""
-      }
-    ];
-
-    function validerLien(valeur) {
-      const url = new URL(valeur);
-
-      if (url.protocol !== "https:" || url.username || url.password) {
-        throw new Error("Utilise un lien HTTPS sans identifiants.");
-      }
-
-      // Protection élémentaire contre la saisie de liens secrets.
-      const parametresInterdits = [
-        "sig", "token", "access_token", "id_token",
-        "client_secret", "code", "api_key", "apikey"
-      ];
-
-      for (const cle of url.searchParams.keys()) {
-        if (parametresInterdits.includes(cle.toLowerCase())) {
-          throw new Error(
-            "Ce lien semble contenir un secret. Utilise un lien de partage."
-          );
-        }
-      }
-
-      return url.href;
-    }
-
-    function lireLien(agent) {
-      try {
-        const valeur = localStorage.getItem("cap-agent-" + agent.id);
-        return valeur === null ? agent.url : valeur;
-      } catch {
-        return agent.url;
-      }
-    }
-
-    const grille = document.getElementById("agents");
-
-    agents.forEach(agent => {
-      const carte = document.createElement("article");
-      carte.className = "carte";
-
-      // Le contenu variable est affecté avec textContent, pas innerHTML.
-      carte.innerHTML = `
-        <span class="icone" aria-hidden="true"></span>
-        <h2></h2>
-        <p class="description"></p>
-        <button type="button" class="ouvrir" disabled>
-          Lien à configurer
-        </button>
-        <details>
-          <summary>Configurer le lien</summary>
-          <label>Lien de partage de l’agent</label>
-          <input type="url" placeholder="Coller le lien HTTPS"
-                 autocomplete="off" spellcheck="false">
-          <button type="button" class="enregistrer">Enregistrer</button>
-        </details>
-        <p class="statut" role="status" aria-live="polite"></p>
-      `;
-
-      carte.querySelector(".icone").textContent = agent.icone;
-      carte.querySelector("h2").textContent = agent.nom;
-      carte.querySelector(".description").textContent = agent.description;
-
-      const champ = carte.querySelector("input");
-      const label = carte.querySelector("label");
-      const bouton = carte.querySelector(".ouvrir");
-      const statut = carte.querySelector(".statut");
-
-      champ.id = "lien-" + agent.id;
-      label.htmlFor = champ.id;
-      champ.value = lireLien(agent);
-
-      let lienActif = "";
-
-      function actualiser() {
-        try {
-          lienActif = validerLien(champ.value.trim());
-          bouton.disabled = false;
-          bouton.textContent = "Ouvrir l’agent ↗";
-          bouton.setAttribute(
-            "aria-label", "Ouvrir " + agent.nom + " dans un nouvel onglet"
-          );
-        } catch {
-          lienActif = "";
-          bouton.disabled = true;
-          bouton.textContent = "Lien à configurer";
-        }
-      }
-
-      actualiser();
-
-      bouton.addEventListener("click", () => {
-        if (lienActif) {
-          window.open(lienActif, "_blank", "noopener,noreferrer");
-        }
-      });
-
-      carte.querySelector(".enregistrer").addEventListener("click", () => {
-        try {
-          const valeur = champ.value.trim();
-          const lien = valeur ? validerLien(valeur) : "";
-
-          try {
-            localStorage.setItem("cap-agent-" + agent.id, lien);
-            statut.textContent = lien
-              ? "Lien enregistré dans ce navigateur."
-              : "Lien supprimé.";
-          } catch {
-            statut.textContent =
-              "Lien utilisable pour cette session, mais non mémorisé.";
-          }
-
-          champ.value = lien;
-          actualiser();
-        } catch (erreur) {
-          statut.textContent = erreur instanceof TypeError
-            ? "Adresse invalide : colle un lien HTTPS complet."
-            : erreur.message;
-        }
-      });
-
-      grille.appendChild(carte);
-    });
-  </script>
-</body>
-</html>
+    .planner .ouvrir:not(:disabled):hover {
+      background
