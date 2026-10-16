@@ -1,13 +1,29 @@
-{
-  "lastUpdate": "2026-10-16",
-  "projects": [
-    {
-      "id": "PROJET-TEST",
-      "name": "Projet test",
-      "status": "Test technique",
-      "attention": "controlled",
-      "dataFile": "data/projects/projet-test.json",
-      "knowledgeFile": "knowledge/projects/PROJET-TEST.md"
-    }
-  ]
-}
+PROJET-TEST
+Dernière consolidation : Non renseignée (jeu de données synthétique) Statut : Test technique - données synthétiques uniquement Niveau d'attention : controlled
+🎯 Synthèse exécutive
+PROJET-TEST est un projet fictif créé exclusivement pour valider le mécanisme de consolidation de la Knowledge Base. Aucune donnée réelle de projet client ou de Capgemini n'est utilisée. Le contenu ci-dessous est volontairement minimal et synthétique.
+🆕 Dernières évolutions
+✅ CONFIRMÉ / RÉALISÉ : fiche de test technique initialisée avec des données entièrement synthétiques.
+⚠️ Risques & alertes
+Aucun risque projet réel : projet fictif.
+Risque de test : toute réutilisation de données réelles invaliderait le jeu d'essai.
+✅ Décisions
+✅ CONFIRMÉ / RÉALISÉ : utiliser exclusivement des données synthétiques pour PROJET-TEST.
+✅ CONFIRMÉ / RÉALISÉ : ne rien publier dans GitHub.
+🟣 À confirmer / À arbitrer
+Aucun élément.
+📌 Actions
+Aucune action réelle attribuée.
+📅 Jalons
+Aucun jalon réel.
+💰 Finance
+Aucune donnée financière réelle ou synthétique renseignée.
+👥 Acteurs clés
+Aucun acteur réel. Les éventuels acteurs du scénario de test sont fictifs et ne sont pas nécessaires à cette consolidation.
+📄 Documents de référence
+Aucun document Microsoft 365 réel utilisé.
+Instruction de test fournie par l'utilisateur dans la présente conversation.
+🔗 Sujets liés
+Test technique de consolidation Knowledge Base.
+🕒 Historique significatif
+Initialisation du jeu de test synthétique. Aucune date métier n'est inventée. ---END FILE--- ---FILE: data/projects/projet-test.json--- { "project": "PROJET-TEST", "name": "PROJET-TEST", "lastConsolidation": "", "status": "Test technique - données synthétiques uniquement", "attentionLevel": "controlled", "executiveSummary": "Projet fictif créé exclusivement pour valider le mécanisme de consolidation de la Knowledge Base. Aucune donnée réelle de projet client ou de Capgemini n'est utilisée.", "highlights": [ { "qualification": "confirmed", "text": "Fiche de test technique initialisée avec des données entièrement synthétiques." } ], "risks": [ { "qualification": "confirmed", "text": "Toute réutilisation de données réelles invaliderait le jeu d'essai." } ], "decisions": [ { "qualification": "confirmed", "text": "Utiliser exclusivement des données synthétiques pour PROJET-TEST." }, { "qualification": "confirmed", "text": "Ne rien publier dans GitHub." } ], "confirmations": [], "actions": [], "milestones": [], "finance": {} }
