@@ -1,2 +1,18 @@
-<img width="3029" height="2268" alt="image" src="https://github.com/user-attachments/assets/6635d109-dbcd-430f-8491-c64194ac5eee" />
+DH Project Map
+Référentiel des projets analysés et consolidés par l'agent Knowledge Base DH.
+
+Ce fichier définit les noms canoniques des projets, leurs alias et les fichiers associés.
+
+PROJET-TEST
+Canonical name: PROJET-TEST
+
+Markdown file: knowledge/projects/PROJET-TEST.md
+
+Data file: data/projects/projet-test.json
+
+Aliases:
+
+PROJET-TEST
+Projet test
+Status: TEST
 
