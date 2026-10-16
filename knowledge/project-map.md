@@ -16,3 +16,16 @@ PROJET-TEST
 Projet test
 Status: TEST
 
+ENIM
+Canonical name: ENIM
+
+Markdown file: knowledge/projects/ENIM.md
+
+Data file: data/projects/enim.json
+
+Aliases:
+
+ENIM
+CDS ENIM
+Centre de Services ENIM
+Status: PILOT
