@@ -1,0 +1,23 @@
+{
+  "project": "PROJET-TEST",
+  "name": "Projet test",
+  "lastConsolidation": "2026-10-16",
+  "status": "Test technique",
+  "attentionLevel": "controlled",
+  "executiveSummary": "Projet fictif utilisé pour valider la nouvelle architecture de la Knowledge Base DH.",
+  "highlights": [
+    {
+      "status": "confirmed",
+      "text": "La structure Markdown et JSON de la Knowledge Base DH est en cours de validation."
+    }
+  ],
+  "risks": [],
+  "decisions": [],
+  "confirmations": [],
+  "actions": [],
+  "milestones": [],
+  "finance": {
+    "visibility": "restricted",
+    "summary": "Aucune donnée financière."
+  }
+}
