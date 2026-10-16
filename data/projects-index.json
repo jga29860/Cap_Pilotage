@@ -1,0 +1,13 @@
+{
+  "lastUpdate": "2026-10-16",
+  "projects": [
+    {
+      "id": "PROJET-TEST",
+      "name": "Projet test",
+      "status": "Test technique",
+      "attention": "controlled",
+      "dataFile": "data/projects/projet-test.json",
+      "knowledgeFile": "knowledge/projects/PROJET-TEST.md"
+    }
+  ]
+}
